@@ -42,16 +42,16 @@ git push -u origin main
 
 ```bash
 # Creazione ambiente virtuale
-virtualenv nome_cartella
+virtualenv <nome_cartella>
 
 # Se necessario bypassare i permessi
-powershell -ExecutionPolicy -Bypass
+powershell -ExecutionPolicy Bypass
 
 # Attivazione ambiente virtuale (Windows)
 nome_cartella\Scripts\activate
 
 # Installazione pacchetti
-pip install nome_pacchetto
+pip install <nome_pacchetto>
 
 # Creazione requirements.txt
 # Aggiornato ogni volta che si installano nuovi pacchetti
@@ -78,8 +78,9 @@ biblioteca/
 
 ## Uso dell'Applicazione
 
-1. Attiva il virtualenv
-2. Installa le dipendenze (`pip install -r requirements.txt`)
-3. Avvia il server Flask (`python app.py`)
-4. Apri il browser su `http://127.0.0.1:5000`
+1. `Git clone https://github.com/Matty-Coding/repo_biblioteca`
+2. Attiva il virtualenv
+3. Installa le dipendenze con il comando: `pip install -r requirements.txt`
+4. Avvia il server Flask con il comando: `python app.py`
+5. Apri il browser su `http://127.0.0.1:5000`
 
