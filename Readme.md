@@ -8,7 +8,7 @@ Questa applicazione permette di effettuare operazioni CRUD (Create, Read, Update
 
 * **Git/GitHub:** Versionamento progressivo del codice
 * **VirtualEnv:** Ambiente virtuale separato per il progetto
-* **Python:** Sviluppo Back-end e gestione della logica applicativa
+* **Python (3.13.0):** Sviluppo Back-end e gestione della logica applicativa
 * **SQL/SQLAlchemy:** Database relazionale
 * **Flask:** Server web e routing
 * **Jinja2:** Inserimento di variabili Python nei template HTML
