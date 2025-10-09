@@ -1,6 +1,6 @@
 # Applicazione Web per Gestire una Biblioteca
 
-Questa applicazione permette di aggiungere, visualizzare, aggiornare ed eliminare libri da una biblioteca.
+Questa applicazione permette di effettuare operazioni CRUD (Create, Read, Update, Delete) su una biblioteca.
 
 ---
 
