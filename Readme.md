@@ -61,18 +61,31 @@ pip freeze > requirements.txt
 ### 4. Creazione struttura del progetto
 
 ```text
-biblioteca/
-├── templates/               # file HTML
-│   ├── base.html
-│   ├── index.html
-│   ├── aggiungi_libro.html
-│   └── modifica_libro.html
-├── static/                  # file CSS e JS
-│   ├── style.css
-│   └── script.js
-├── app.py                   # file principale Flask
-└── requirements.txt         # dipendenze Python
+├── crud/
+|    ├── __init__.py
+|    └── crud_function.py
+├── models/
+|    ├── __init__.py
+|    └── object_model.py
+├── settings/
+|    ├── __init__.py
+|    └── config.py
+├── static/
+|    └── style.css
+├── templates/
+|   ├── aggiungi_libro.html
+|   ├── base.html
+|   ├── index.html
+|   └── modifica_lìbro.html
+├── app.py
+└── requirements.txt
 ```
+
+---
+
+## Sviluppo dell'applicazione
+
+**WORK IN PROGRESS...**
 
 ---
 
@@ -83,4 +96,5 @@ biblioteca/
 3. Installa le dipendenze con il comando: `pip install -r requirements.txt`
 4. Avvia il server Flask con il comando: `python app.py`
 5. Apri il browser su `http://127.0.0.1:5000`
+
 
