@@ -55,7 +55,7 @@ pip install <nome_pacchetto>
 
 # Creazione requirements.txt
 # Aggiornato ogni volta che si installano nuovi pacchetti
-pip freeze > requirements.txt
+pip freeze --version > requirements.txt
 ```
 
 ### 4. Creazione struttura del progetto
@@ -91,8 +91,8 @@ pip freeze > requirements.txt
 
 ## Uso dell'Applicazione
 
-1. `Git clone https://github.com/Matty-Coding/repo_biblioteca`
-2. Attiva il virtualenv
+1. Copia il repo con il comando: `Git clone https://github.com/Matty-Coding/repo_biblioteca`
+2. Crea e attiva un virtualenv
 3. Installa le dipendenze con il comando: `pip install -r requirements.txt`
 4. Avvia il server Flask con il comando: `python app.py`
 5. Apri il browser su `http://127.0.0.1:5000`
