@@ -44,9 +44,6 @@ git push -u origin main
 # Creazione ambiente virtuale
 virtualenv <nome_cartella>
 
-# Se necessario bypassare i permessi
-powershell -ExecutionPolicy Bypass
-
 # Attivazione ambiente virtuale (Windows)
 nome_cartella\Scripts\activate
 
