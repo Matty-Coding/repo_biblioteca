@@ -1,14 +1,20 @@
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
-
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
 
 # Tabella libri
 class Libro(db.Model):
+    def __init__(self, autore, titolo, genere, totale_libri):
+        self.autore = autore
+        self.titolo = titolo
+        self.genere = genere
+        self.totale_libri = totale_libri
+
     __tablename__ = "libri"
     id = Column(Integer, primary_key=True, autoincrement=True)
     autore = Column(String(255), nullable=False)
@@ -18,12 +24,18 @@ class Libro(db.Model):
 
     # Relazione tra tabelle prestiti-libri
     prestiti = relationship("Prestito", back_populates="libro")
-
-    def __init__(self, autore, titolo, genere, totale_libri):
-        self.autore = autore
-        self.titolo = titolo
-        self.genere = genere
-        self.totale_libri = totale_libri
+    
+    def to_dict(self):
+        return {
+            "id" : self.id,
+            "autore" : self.autore,
+            "titolo" : self.titolo,
+            "genere" : self.genere,
+            "totale_libri" : self.totale_libri
+        }
+        
+    def __str__(self):
+        return str(self.to_dict())
 
 # =============================================
 # =============================================
@@ -32,6 +44,12 @@ class Libro(db.Model):
 
 # Tabella utenti
 class Utente(db.Model):
+    def __init__(self, nome, cognome, email, telefono):
+        self.nome = nome
+        self.cognome = cognome
+        self.email = email
+        self.telefono = telefono
+        
     __tablename__ = "utenti"
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(255), nullable=False)
@@ -42,13 +60,18 @@ class Utente(db.Model):
     # Relazione tra tabelle prestiti-utenti
     prestiti = relationship("Prestito", back_populates="utente")
 
-    def __init__(self, nome, cognome, email, telefono):
-        self.nome = nome
-        self.cognome = cognome
-        self.email = email
-        self.telefono = telefono
+    def to_dict(self):
+        return {
+            "id" : self.id,
+            "nome" : self.nome,
+            "cognome" : self.cognome,
+            "email" : self.email,
+            "telefono" : self.telefono
+        }
 
-
+    def __str__(self):
+        return str(self.to_dict())
+    
 # ==========================================
 # ==========================================
 # ==========================================
@@ -56,6 +79,12 @@ class Utente(db.Model):
 
 # Tabella prestiti
 class Prestito(db.Model):
+    def __init__(self, id_libro, id_utente, data_inizio, data_fine=None):
+        self.id_libro = id_libro
+        self.id_utente = id_utente
+        self.data_inizio = data_inizio
+        self.data_fine = data_fine
+    
     __tablename__ = "prestiti"
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_libro = Column(Integer, ForeignKey("libri.id"), nullable=False)
@@ -69,8 +98,14 @@ class Prestito(db.Model):
     # Relazione tra tabelle utenti-prestiti
     utente = relationship("Utente", back_populates="prestiti")
 
-    def __init__(self, id_libro, id_utente, data_inizio, data_fine=None):
-        self.id_libro = id_libro
-        self.id_utente = id_utente
-        self.data_inizio = data_inizio
-        self.data_fine = data_fine
+    def to_dict(self):
+        return {
+            "id" : self.id,
+            "id_libro" : self.id_libro,
+            "id_utente" : self.id_utente,
+            "data_inizio" : datetime.strftime(self.data_inizio, "%d/%m/%y") if self.data_inizio else None,
+            "data_fine" : datetime.strftime(self.data_fine, "%d/%m/%y") if self.data_fine else None
+        }
+        
+    def __str__(self):
+        return str(self.to_dict())
