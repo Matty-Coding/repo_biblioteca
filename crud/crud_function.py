@@ -1,5 +1,5 @@
-from app import db
-from models import Libro, Utente, Prestito
+
+from models import Libro, Utente, Prestito, db
 
 
 # Operazioni CRUD sui libri

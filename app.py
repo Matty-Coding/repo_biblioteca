@@ -2,8 +2,8 @@
 from os.path import exists
 from flask import Flask, render_template
 from settings import Configurazione
-from models import Libro, Utente, Prestito
-from models.object_model import db
+from models import Libro, Utente, Prestito, db
+# from models.object_model import db
 from crud import CRUD_Libro, CRUD_Utente, CRUD_Prestito
 
 # Istanza della Classe Flask + definizione path static/template
