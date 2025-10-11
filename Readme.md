@@ -82,7 +82,31 @@ pip freeze --version > requirements.txt
 
 ## Sviluppo dell'applicazione
 
-**WORK IN PROGRESS...**
+Il progetto intero è stato suddiviso in tante sezioni, tutte comunicanti tra di loro. <br>
+
+---
+
+`SQLAlchemy` interagisce con il Database scrivendo codice Python, questo esclude la presenza di query `SQL`. <br>
+
+Crea un ponte di comunicazione con il Database in questo modo:
+
+```text
+Codice Python --> SQLAlchemy crea una query in SQL --> Comunica con il database
+```
+
+---
+
+`Flask` si occupa della gestione del Server e di tutto ciò che si collega ad esso. <br>
+Una delle funzionalità più importanti è resa possibile da `Jinja2`, che permette di scrivere variabili e logiche di Python nelle pagine HTML.
+
+---
+
+`os` utile per gestire i PATH necessari all'app per funzionare.
+
+---
+
+Nelle varie sottocartelle o <i>"pacchetti"</i>, il flusso di lavoro viene gestito tramite delle Classi che contengono tutti i metodi necessari al funzionamento del progetto, facilitando l'importazione di quest'ultimi tra i vari file. <br>
+I metodi sono implementati, dove necessario, con `Type Hinting` incluso per una migliore lettura e riutilizzo.
 
 ---
 
