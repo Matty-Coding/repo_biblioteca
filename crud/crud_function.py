@@ -1,6 +1,7 @@
 
 from models import Libro, Utente, Prestito, db
 from datetime import datetime
+from werkzeug.security import generate_password_hash
 
 # Operazioni CRUD sui libri
 class CRUD_Libro:
@@ -108,8 +109,8 @@ class CRUD_Utente:
     # CREATE 
     
     @staticmethod
-    def create(nome:str, cognome:str, email:str, telefono:str) -> dict:
-        utente = Utente(nome, cognome, email, telefono)
+    def create(nome:str, cognome:str, email:str, telefono:str, password:str) -> dict:
+        utente = Utente(nome, cognome, email, telefono, password)
         try:
             db.session.add(utente)
             db.session.commit()
@@ -150,7 +151,7 @@ class CRUD_Utente:
     # UPDATE
     
     @staticmethod
-    def update(id_utente:int, nome=None, cognome=None, email=None, telefono=None) -> dict:
+    def update(id_utente:int, nome=None, cognome=None, email=None, telefono=None, password=None) -> dict:
         try:
             utente = db.session.get(Utente, id_utente)
             
@@ -169,6 +170,9 @@ class CRUD_Utente:
             if telefono is not None:
                 utente.telefono = telefono
     
+            if password is not None:
+                utente.password_hash = generate_password_hash(password)
+                
             db.session.commit()
             
             return {"operazione":True, "risultato":utente.to_dict()}

@@ -2,6 +2,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash 
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -44,19 +45,21 @@ class Libro(db.Model):
 
 # Tabella utenti
 class Utente(db.Model):
-    def __init__(self, nome, cognome, email, telefono):
+    def __init__(self, nome, cognome, email, telefono, password):
         self.nome = nome
         self.cognome = cognome
         self.email = email
         self.telefono = telefono
+        self.password_hash = generate_password_hash(password)
         
     __tablename__ = "utenti"
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(255), nullable=False)
     cognome = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False, unique=True)
-    telefono = Column(String(255), nullable=False, unique=True)
-
+    telefono = Column(String(10), nullable=False, unique=True)
+    password_hash = Column(String(255), nullable=False)
+    
     # Relazione tra tabelle prestiti-utenti
     prestiti = relationship("Prestito", back_populates="utente")
 
@@ -66,11 +69,16 @@ class Utente(db.Model):
             "nome" : self.nome,
             "cognome" : self.cognome,
             "email" : self.email,
-            "telefono" : self.telefono
+            "telefono" : self.telefono,
         }
 
+    def verifica_password(self, password):
+        return check_password_hash(self.password_hash, password)
+        
     def __str__(self):
         return str(self.to_dict())
+    
+    
     
 # ==========================================
 # ==========================================
@@ -109,3 +117,5 @@ class Prestito(db.Model):
         
     def __str__(self):
         return str(self.to_dict())
+    
+    

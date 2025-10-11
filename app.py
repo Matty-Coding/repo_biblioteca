@@ -6,6 +6,7 @@ from models import Libro, Utente, Prestito, db
 # from models.object_model import db
 from crud import CRUD_Libro, CRUD_Utente, CRUD_Prestito
 
+
 # Istanza della Classe Flask + definizione path static/template
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
@@ -15,10 +16,22 @@ app.config.from_object(Configurazione)
 # Inizializzazione del database connesso all'app
 db.init_app(app)
 
+def login_required():
+    def wrapper(*args, **kwarsg):
+        pass
+    
+    return wrapper
+
+
+
+
+
+
+
 # Route Home Page
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", route="/")
 
 
 
@@ -64,7 +77,7 @@ if __name__ == "__main__":
             
             # print("\n=== TEST CRUD_UTENTE ===")
             # try:
-            #     result = CRUD_Utente.create("Mario", "Rossi", "mario@rossi.it", "1234567890")
+            #     result = CRUD_Utente.create("Mario", "Rossi", "mario@rossi.it", "1234567890", "provapassword")
             #     print("CREATE Utente:", result)
                 
             #     result = CRUD_Utente.read_all()
