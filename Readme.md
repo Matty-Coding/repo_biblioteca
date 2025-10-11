@@ -82,11 +82,11 @@ pip freeze --version > requirements.txt
 
 ## Sviluppo dell'applicazione
 
-Il progetto intero è stato suddiviso in tante sezioni, tutte comunicanti tra di loro. <br>
+Il progetto è stato suddiviso in tante sezioni, tutte comunicanti tra di loro. <br>
 
 ---
 
-`SQLAlchemy` interagisce con il Database scrivendo codice Python, questo esclude la presenza di query `SQL`. <br>
+`SQLAlchemy` interagisce con il Database scrivendo codice Python, questo esclude la presenza di query `SQL` esplicite. <br>
 
 Crea un ponte di comunicazione con il Database in questo modo:
 
