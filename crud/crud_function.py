@@ -102,6 +102,7 @@ class CRUD_Libro:
 # =======================================
 # =======================================
 
+# CORREGGI CREAZIONE SE ARRIVANO INPUT NON VALIDI
 
 # Operazioni CRUD sugli utenti
 class CRUD_Utente:
@@ -110,8 +111,11 @@ class CRUD_Utente:
     
     @staticmethod
     def create(nome:str, cognome:str, email:str, telefono:str, password:str) -> dict:
+        # if not all([nome, cognome, email, telefono, password]):
+        #     return {"operazione":False, "risultato":"Campi mancanti o non validi, impossibile creare nuovo utente."}
         utente = Utente(nome, cognome, email, telefono, password)
         try:
+            # utente = Utente(nome, cognome, email, telefono, password)
             db.session.add(utente)
             db.session.commit()
             

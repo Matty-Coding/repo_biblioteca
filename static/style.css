@@ -1,0 +1,35 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: darkcyan;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.alert {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-weight: bolder;
+    height: 10%;
+    font-size: 21px;
+}
+
+.alert-success {
+    background-color: greenyellow;
+    color: black;
+}
+
+.alert-error {
+    background-color: red;
+    color: black;
+}
+
+.form-container {
+    margin-top: 50px;
+}
+

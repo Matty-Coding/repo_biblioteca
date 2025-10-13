@@ -110,6 +110,8 @@ I metodi sono implementati, dove necessario, con `Type Hinting` incluso per una 
 
 ---
 
+# Work in progress...
+
 ## Uso dell'Applicazione
 
 1. Copia il repo con il comando: `Git clone https://github.com/Matty-Coding/repo_biblioteca`

@@ -1,14 +1,13 @@
 
 from os.path import exists
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, flash, session
 from settings import Configurazione
-from models import Libro, Utente, Prestito, db
-# from models.object_model import db
+from models import Libro, Utente, Prestito, db, RegisterForm, LoginForm
 from crud import CRUD_Libro, CRUD_Utente, CRUD_Prestito
-
+from flask_login import login_required, LoginManager, login_user, current_user, logout_user
 
 # Istanza della Classe Flask + definizione path static/template
-app = Flask(__name__, static_folder="static", template_folder="templates")
+app = Flask(__name__)
 
 # Collego la configurazione all'app, incluso il path del Database
 app.config.from_object(Configurazione)
@@ -16,11 +15,46 @@ app.config.from_object(Configurazione)
 # Inizializzazione del database connesso all'app
 db.init_app(app)
 
-def login_required():
-    def wrapper(*args, **kwarsg):
-        pass
-    
-    return wrapper
+# Istanzio l'oggetto login_manager dalla classe importata LoginManager
+login_manager = LoginManager()
+
+# lo collego e inizializzo all'app
+login_manager.init_app(app)
+
+# carico utente
+@login_manager.user_loader
+def load_user(user_id):
+    return Utente.query.get(int(user_id))
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegisterForm()    
+    if form.validate_on_submit():
+        if not CRUD_Utente.read_email(form.email.data) and not CRUD_Utente.read_phone(form.telefono.data):
+            CRUD_Utente.create(
+                nome=form.nome.data,
+                cognome=form.cognome.data,
+                email=form.email.data,
+                telefono=form.telefono.data,
+                password=form.password.data
+            )
+            
+            flash("Registrazione avvenuta correttamente.", "success")
+            
+            return render_template("index.html")
+        
+        else:
+            flash("Email o telefono già esistenti. Riprovare.", "error")
+            
+    else:
+        if form.errors:
+            for campo, errori in form.errors.items():
+                for errore in errori:
+                    flash(f"{campo.capitalize()} non valido: {errore}.", "error")
+        
+    return render_template("register.html", form=form)
+
 
 
 
@@ -29,9 +63,10 @@ def login_required():
 
 
 # Route Home Page
-@app.route("/")
-def index():
-    return render_template("index.html", route="/")
+# @app.route("/")
+# @login_required
+# def index():
+#     return render_template("index.html", route="/")
 
 
 
@@ -40,10 +75,13 @@ if __name__ == "__main__":
     with app.app_context():
         try:
             if not exists(Configurazione.DATABASE_PATH):
-                print(f"\n✅ Database già esistente nella directory.\nPath Database --> {Configurazione.DATABASE_PATH}")
-            else:
                 db.create_all()
                 print(f"\n✅ Database creato correttamente.\nPath Database --> {Configurazione.DATABASE_PATH}")
+
+            else:
+                print(f"\n✅ Database già esistente nella directory.\nPath Database --> {Configurazione.DATABASE_PATH}")
+                
+                
                 
             # print("\n\n====== DEBUG ========\n\n")
             

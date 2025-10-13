@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash 
 from datetime import datetime
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -44,7 +45,13 @@ class Libro(db.Model):
 
 
 # Tabella utenti
-class Utente(db.Model):
+# UserMixin aggiunge automaticamente:
+# - is_authenticated
+# - is_active
+# - is_anonymous
+# - get_id()
+# questi metodi vengono usati da flask_login per capire chi è loggato
+class Utente(db.Model, UserMixin):
     def __init__(self, nome, cognome, email, telefono, password):
         self.nome = nome
         self.cognome = cognome

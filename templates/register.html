@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %} Register {% endblock title %}   
+
+{% block content %}
+
+    <!-- sezione per i messaggi flash -->
+    {% with messaggi = get_flashed_messages(with_categories=True) %}
+        {% if messaggi %}
+            {% for i in messaggi %}
+                <div class="alert alert-{{ i[0] }}">{{ i[1] }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    
+
+    <!-- sezione per il form di registrazione -->
+    <form class="form-container" action="/register" method="post">
+        
+        {{ form.hidden_tag() }}     <!-- genera token di protezione vs CSRF -->
+    
+        <div class="form-element">{{ form.nome.label }} {{ form.nome(placeholder="Inserisci nome") }}</div>
+        <div class="form-element">{{ form.cognome.label }} {{ form.cognome(placeholder="Inserisci cognome") }}</div>
+        <div class="form-element">{{ form.email.label }} {{ form.email(placeholder="Inserisci email") }}</div>
+        <div class="form-element">{{ form.telefono.label }} {{ form.telefono(placeholder="Inserisci telefono") }}</div>
+        <div class="form-element">{{ form.password.label }} {{ form.password(placeholder="Inserisci password") }}</div>
+        <div class="form-element">{{ form.submit() }}</div>
+
+    </form>
+
+
+
+{% endblock content %}
