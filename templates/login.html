@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+    
+    {% with messaggi = get_flashed_messages(with_categories=True) %}
+        {% if messaggi %}
+            {% for i in messaggi %}
+                <div class="alert alert-{{ i[0] }}">{{ i[1] }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form class="form-container" action="/login" method="post">
+
+        {{ form.hidden_tag() }}
+        
+        <div class="form-element">{{ form.utente.label }} {{ form.utente(placeholder="Inserisci telefono o email") }}</div>
+        <div class="form-element">{{ form.password.label }} {{ form.password(placeholder="Inserisci password") }}</div>
+        <div class="form-element">{{ form.submit() }}</div>
+        
+    </form>    
+
+{% endblock content %}
+

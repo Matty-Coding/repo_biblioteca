@@ -6,12 +6,10 @@
     
     {% with messaggi = get_flashed_messages(with_categories=True) %}
         {% if messaggi %}
-            {% for messaggio, stato in messaggi %}
-                <div class="alert alert-{{ stato }}">{{ messaggio }}</div>                
+            {% for i in messaggi %}
+                <div class="alert alert-{{ i[0] }}">{{ i[1] }}</div>                
             {% endfor %}
-            
-        {% endif %}
-        
+        {% endif %}   
     {% endwith %}
 
     <h1>FINALMENTE TI SEI REGISTRATO!!!</h1>

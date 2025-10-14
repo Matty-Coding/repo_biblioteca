@@ -1,6 +1,6 @@
 
 from flask_wtf import FlaskForm    # form di flask 
-from wtforms import PasswordField, StringField, SubmitField    # classi con Field == type input HTML
+from wtforms import PasswordField, StringField, SubmitField, EmailField, TelField    # classi con Field == type input HTML
 from wtforms.validators import DataRequired as req, Email, Length, Regexp as reg     # controlli di validazione
 
 
@@ -16,13 +16,13 @@ class RegisterForm(FlaskForm):
     
     cognome = StringField("Cognome", 
                           validators=[
-                              req(), 
-                              reg(r"^[A-Za-z ]+$", 
-                                  message="Solo lettere o spazi consentiti")
-                              ]
+                            req(), 
+                            reg(r"^[A-Za-z ]+$", 
+                                message="Solo lettere o spazi consentiti")
+                            ]
                           )
     
-    email = StringField("Email",
+    email = EmailField("Email",
                         validators=[
                             req(), 
                             Email(), 
@@ -31,7 +31,7 @@ class RegisterForm(FlaskForm):
                             ]
                         )
     
-    telefono = StringField("Telefono",
+    telefono = TelField("Telefono",
                            validators=[
                                req(),
                                reg(r"^\d{10}$", 
@@ -44,7 +44,7 @@ class RegisterForm(FlaskForm):
                                 req(), 
                                 Length(min=8),
                                 reg(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&*?.])[^\-';\"$@].{8,}$",
-                                    message="La password deve contenere almeno una maiuscola, minuscola, numero e simbolo tra ?.!_*")
+                                    message="La password deve essere di almeno 8 caratteri e contenere almeno una maiuscola, minuscola, numero e simbolo tra ?.!_*")
                                 ] 
                             )
     
@@ -54,7 +54,7 @@ class RegisterForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     utente = StringField(
-        "Email o numero di telefono",
+        "Utente",
         validators=[
             req(),
             reg(r"^\d{10}$|^[a-zA-Z0-9]+[_.-]?[a-zA-Z0-9]+@[a-zA-Z0-9]+[-.]?[a-zA-Z0-9]+\.[a-zA-Z]{2,}$",
@@ -69,7 +69,7 @@ class LoginForm(FlaskForm):
             req(), 
             Length(min=8), 
             reg(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&*?.])[^\-';\"$@].{8,}$",
-                message="La password deve contenere almeno una maiuscola, minuscola, numero e simbolo tra ?.!_*")
+                message="La password deve essere di almeno 8 caratteri e contenere almeno una maiuscola, minuscola, numero e simbolo tra ?.!_*")
             ] 
         )
     

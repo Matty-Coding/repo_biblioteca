@@ -20,7 +20,7 @@
         
         {{ form.hidden_tag() }}     <!-- genera token di protezione vs CSRF -->
     
-        <div class="form-element">{{ form.nome.label }} {{ form.nome(placeholder="Inserisci nome") }}</div>
+        <div class="form-element">{{ form.nome.label }} {{ form.nome(placeholder="Inserisci nome", autofocus=True) }}</div>
         <div class="form-element">{{ form.cognome.label }} {{ form.cognome(placeholder="Inserisci cognome") }}</div>
         <div class="form-element">{{ form.email.label }} {{ form.email(placeholder="Inserisci email") }}</div>
         <div class="form-element">{{ form.telefono.label }} {{ form.telefono(placeholder="Inserisci telefono") }}</div>

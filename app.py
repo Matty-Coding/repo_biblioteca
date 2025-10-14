@@ -1,6 +1,6 @@
 
 from os.path import exists
-from flask import Flask, render_template, url_for, flash, session
+from flask import Flask, render_template, url_for, flash, redirect
 from settings import Configurazione
 from models import Libro, Utente, Prestito, db, RegisterForm, LoginForm
 from crud import CRUD_Libro, CRUD_Utente, CRUD_Prestito
@@ -42,20 +42,46 @@ def register():
             
             flash("Registrazione avvenuta correttamente.", "success")
             
-            return render_template("index.html")
+            # return render_template("index.html")
+            return redirect(url_for("login"))
         
         else:
-            flash("Email o telefono già esistenti. Riprovare.", "error")
+            flash("Email o telefono già esistenti.", "error")
             
     else:
         if form.errors:
-            for campo, errori in form.errors.items():
+            for errori in form.errors.values():
                 for errore in errori:
-                    flash(f"{campo.capitalize()} non valido: {errore}.", "error")
+                    flash(f"{errore}.", "error")
         
     return render_template("register.html", form=form)
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if "@" in form.utente.data:
+            utente = CRUD_Utente.read_email(form.utente.data)      
+        else:
+            utente = CRUD_Utente.read_phone(form.utente.data)   
+            
+        if not utente:
+            flash("Utente non trovato. Riprovare", "warning")
+            return render_template("login.html", form=form)  
+        
+        if not utente.verifica_password(form.password.data):
+            flash("Credenziali errate. Accesso negato!", "error")
+        
+        flash("Accesso eseguito correttamente!", "success")
+        return render_template("index.html")
+               
+    else:
+        if form.errors:
+            for errore in form.errors.values():
+                flash(f"{errore}.", "error")
+            
+    return render_template("login.html", form=form)
 
 
 
@@ -66,7 +92,7 @@ def register():
 # @app.route("/")
 # @login_required
 # def index():
-#     return render_template("index.html", route="/")
+#     return render_template("index.html")
 
 
 
@@ -169,4 +195,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"\n⚠️  Non è stato possibile creare il database.\n{str(e)}")
                 
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

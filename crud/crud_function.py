@@ -30,11 +30,11 @@ class CRUD_Libro:
         return db.session.query(Libro).all()
     
     @staticmethod
-    def read_id(id_libro:int) -> dict:
+    def read_id(id_libro:int) -> Libro | None:
         return db.session.get(Libro, id_libro)
     
     @staticmethod
-    def read_title(titolo:str) -> dict:
+    def read_title(titolo:str) -> Libro | None:
         return db.session.query(Libro).filter_by(titolo=titolo).first()
     
     @staticmethod
@@ -133,7 +133,7 @@ class CRUD_Utente:
         return db.session.query(Utente).all()
     
     @staticmethod
-    def read_id(id_utente:int) -> dict:
+    def read_id(id_utente:int) -> Utente | None:
         return db.session.get(Utente, id_utente)
     
     @staticmethod
@@ -145,11 +145,11 @@ class CRUD_Utente:
         return db.session.query(Utente).filter_by(cognome=cognome).all()
     
     @staticmethod
-    def read_email(email:str) -> dict:
+    def read_email(email:str) -> Utente | None:
         return db.session.query(Utente).filter_by(email=email).first()
     
     @staticmethod
-    def read_phone(telefono:str) -> dict:
+    def read_phone(telefono:str) -> Utente | None:
         return db.session.query(Utente).filter_by(telefono=telefono).first()
     
     # UPDATE
@@ -245,7 +245,7 @@ class CRUD_Prestito:
         return db.session.query(Prestito).filter_by(id_libro=id_libro).all()
     
     @staticmethod
-    def read_user_id(id_utente:int) -> dict:
+    def read_user_id(id_utente:int) -> Prestito | None:
         return db.session.query(Prestito).filter_by(id_utente=id_utente).first()
     
     # UPDATE
