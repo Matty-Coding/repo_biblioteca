@@ -1,12 +1,13 @@
-from os import getcwd
+from os import getenv, getcwd
 from os.path import join
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Configurazione:
-    SECRET_KEY = "supercalifragilistichespiralidoso"
-    BASEDIR = getcwd()
-    DATABASE_NAME = "Bibliooo.db"
-    DATABASE_PATH = join(BASEDIR, DATABASE_NAME)
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DATABASE_PATH}"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = getenv("SECRET_KEY", "chiavesupersegreta")
+    DATABASE_PATH = join(getcwd(), "Bibliooo.db")
+    SQLALCHEMY_DATABASE_URI = getenv("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_TRACK_MODIFICATIONS = getenv("SQLALCHEMY_TRACK_MODIFICATIONS", False)
 
-    
+

@@ -2,9 +2,11 @@
 from os.path import exists
 from flask import Flask, render_template, url_for, flash, redirect
 from settings import Configurazione
-from models import Libro, Utente, Prestito, db, RegisterForm, LoginForm
+from models import Libro, Utente, Prestito, db, RegisterForm, LoginForm, LibroForm
 from crud import CRUD_Libro, CRUD_Utente, CRUD_Prestito
-from flask_login import login_required, LoginManager, login_user, current_user, logout_user
+from flask_login import login_required, LoginManager, login_user, logout_user, current_user
+
+
 
 # Istanza della Classe Flask + definizione path static/template
 app = Flask(__name__)
@@ -24,7 +26,7 @@ login_manager.init_app(app)
 # carico utente
 @login_manager.user_loader
 def load_user(user_id):
-    return Utente.query.get(int(user_id))
+    return db.session(Utente, int(user_id))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -52,7 +54,7 @@ def register():
         if form.errors:
             for errori in form.errors.values():
                 for errore in errori:
-                    flash(f"{errore}.", "error")
+                    flash(f"{errore}", "error")
         
     return render_template("register.html", form=form)
 
@@ -73,26 +75,55 @@ def login():
         if not utente.verifica_password(form.password.data):
             flash("Credenziali errate. Accesso negato!", "error")
         
+        login_user(utente)
+        load_user(utente.id)
+
+        # DEBUG
+        if utente.is_authenticated:
+            print(f"\n✅ {utente.nome.title()} {utente.cognome.title()} è autenticato correttamente.")
+            
         flash("Accesso eseguito correttamente!", "success")
         return render_template("index.html")
                
     else:
         if form.errors:
             for errore in form.errors.values():
-                flash(f"{errore}.", "error")
+                flash(f"{errore}", "error")
             
     return render_template("login.html", form=form)
 
 
+@app.route("/", methods=["GET", "POST"])
+def index():
+    # lettura di tutti i libri
+    libri_disponibili = CRUD_Libro.read_all() 
+    print("\n======== LIBRI DISPONIBILI =========\n", libri_disponibili)
+    # gestione form get/post
+    form = LibroForm()
+    if form.validate_on_submit():
+        libro = CRUD_Libro.create(
+            autore = form.autore.data,
+            titolo = form.titolo.data,
+            genere = form.genere.data,
+            totale_libri = form.totale_libri.data
+        )
 
+        nuovo_libro = libro.get("risultato")
 
+        if nuovo_libro is not None:
+            flash("Libro aggiunto correttamente", "success")
+            return render_template("index.html", nuovo_libro=nuovo_libro, form=form)
 
-
-# Route Home Page
-# @app.route("/")
-# @login_required
-# def index():
-#     return render_template("index.html")
+        else:
+            flash("Non è stato possibile aggiungere il libro, riprovare", "error")
+            return render_template("index.html", form=form)
+        
+    else:
+        if form.errors:
+            for errore in form.errors.values():
+                flash(f"{errore}", "error")
+        
+    return render_template("index.html", libri_disponibili=libri_disponibili, form=form)
 
 
 
@@ -102,95 +133,10 @@ if __name__ == "__main__":
         try:
             if not exists(Configurazione.DATABASE_PATH):
                 db.create_all()
-                print(f"\n✅ Database creato correttamente.\nPath Database --> {Configurazione.DATABASE_PATH}")
+                print(f"\n✅ Database creato correttamente.\nPath Database --> {Configurazione.SQLALCHEMY_DATABASE_URI}")
 
             else:
-                print(f"\n✅ Database già esistente nella directory.\nPath Database --> {Configurazione.DATABASE_PATH}")
-                
-                
-                
-            # print("\n\n====== DEBUG ========\n\n")
-            
-            # print("=== TEST CRUD_LIBRO ===")
-            # try:
-            #     result = CRUD_Libro.create("Autore", "Titolo", "Genere", 3)
-            #     print("CREATE Libro:", result)
-                
-            #     result = CRUD_Libro.read_all()
-            #     print("READ ALL Libri:", [l.to_dict() for l in result])
-                
-            #     result = CRUD_Libro.read_id(1)
-            #     print("READ ID 1 Libro:", result.to_dict() if result else None)
-                
-            #     result = CRUD_Libro.read_title("Titolo")
-            #     print("READ Titolo 'Titolo':", result.to_dict() if result else None)
-                
-            #     result = CRUD_Libro.read_author("Autore")
-            #     print("READ Autore 'Autore':", [l.to_dict() for l in result])
-                
-            #     result = CRUD_Libro.read_genre("Genere")
-            #     print("READ Genere 'Genere':", [l.to_dict() for l in result])
-                
-            #     result = CRUD_Libro.update(1, titolo="Nuovo Titolo")
-            #     print("UPDATE Titolo Libro ID 1:", result)
-                
-            #     result = CRUD_Libro.delete(1)
-            #     print("DELETE Libro ID 1:", result)
-            # except Exception as e:
-            #     print(f"Errore CRUD_Libro: {e}")
-            
-            # print("\n=== TEST CRUD_UTENTE ===")
-            # try:
-            #     result = CRUD_Utente.create("Mario", "Rossi", "mario@rossi.it", "1234567890", "provapassword")
-            #     print("CREATE Utente:", result)
-                
-            #     result = CRUD_Utente.read_all()
-            #     print("READ ALL Utenti:", [u.to_dict() for u in result])
-                
-            #     result = CRUD_Utente.read_id(1)
-            #     print("READ ID 1 Utente:", result.to_dict() if result else None)
-                
-            #     result = CRUD_Utente.read_name("Mario")
-            #     print("READ Nome 'Mario':", [u.to_dict() for u in result])
-                
-            #     result = CRUD_Utente.read_surname("Rossi")
-            #     print("READ Cognome 'Rossi':", [u.to_dict() for u in result])
-                
-            #     result = CRUD_Utente.read_email("mario@rossi.it")
-            #     print("READ Email 'mario@rossi.it':", result.to_dict() if result else None)
-                
-            #     result = CRUD_Utente.read_phone("1234567890")
-            #     print("READ Telefono '1234567890':", result.to_dict() if result else None)
-                
-            #     result = CRUD_Utente.update(1, nome="Luigi")
-            #     print("UPDATE Nome Utente ID 1:", result)
-                
-            #     result = CRUD_Utente.delete(1)
-            #     print("DELETE Utente ID 1:", result)
-            # except Exception as e:
-            #     print(f"Errore CRUD_Utente: {e}")
-            
-            # print("\n=== TEST CRUD_PRESTITO ===")
-            # try:
-            #     result = CRUD_Prestito.create(1, 1, "01/10/25", "15/10/25")
-            #     print("CREATE Prestito:", result)
-                
-            #     result = CRUD_Prestito.read_all()
-            #     print("READ ALL Prestiti:", [p.to_dict() for p in result])
-                
-            #     result = CRUD_Prestito.read_book_id(1)
-            #     print("READ Prestiti Libro ID 1:", [p.to_dict() for p in result])
-                
-            #     result = CRUD_Prestito.read_user_id(1)
-            #     print("READ Prestito Utente ID 1:", result.to_dict() if result else None)
-                
-            #     result = CRUD_Prestito.update(1, data_fine="20/10/25")
-            #     print("UPDATE Data Fine Prestito ID 1:", result)
-                
-            #     result = CRUD_Prestito.delete(1)
-            #     print("DELETE Prestito ID 1:", result)
-            # except Exception as e:
-            #     print(f"Errore CRUD_Prestito: {e}")
+                print(f"\n✅ Database già esistente nella directory.\nPath Database --> {Configurazione.SQLALCHEMY_DATABASE_URI}")
             
         except Exception as e:
             print(f"\n⚠️  Non è stato possibile creare il database.\n{str(e)}")

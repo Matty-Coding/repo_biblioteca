@@ -15,6 +15,7 @@ class CRUD_Libro:
         try:
             db.session.add(libro)
             db.session.commit()
+            db.session.flush()
             
             return {"operazione":True, "risultato":libro.to_dict()}
         
@@ -27,7 +28,7 @@ class CRUD_Libro:
     
     @staticmethod
     def read_all() -> list:
-        return db.session.query(Libro).all()
+        return [libro.to_dict() for libro in db.session.query(Libro).all()]
     
     @staticmethod
     def read_id(id_libro:int) -> Libro | None:

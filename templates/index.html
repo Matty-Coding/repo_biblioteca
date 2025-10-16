@@ -12,7 +12,44 @@
         {% endif %}   
     {% endwith %}
 
-    <h1>FINALMENTE TI SEI REGISTRATO!!!</h1>
 
+    <!-- <h1>HOME PAGE, SEI REGISTRATO E LOGGATO CORRETTAMENTE</h1> -->
+
+    <!-- <form class="form-container" action="/" method="post">
+
+        {{ form.hidden_tag() }}
+        
+        <div class="form-element">{{ form.autore.label }} {{ form.autore(placeholder="Inserisci autore") }}</div>
+        <div class="form-element">{{ form.titolo.label }} {{ form.titolo(placeholder="Inserisci titolo") }}</div>
+        <div class="form-element">{{ form.genere.label }} {{ form.genere(placeholder="Inserisci genere") }}</div>
+        <div class="form-element">{{ form.totale_libri.label }} {{ form.totale_libri(placeholder="Inserisci totale libri") }}</div>
+        <div class="form-element">{{ form.submit() }}</div>
+        
+    </form>     -->
+
+    <div class="tabella">
+        {% if libri_disponibili %}
+            <table>
+                <tr>
+                    <th>Autore</th>
+                    <th>Titolo</th>
+                    <th>Genere</th>
+                    <th>Disponibili</th>
+                </tr>
+                {% for libro in libri_disponibili %}
+                    <tr>
+                        <td>{{ libro.get("autore") }}</td>
+                        <td>{{ libro.get("titolo") }}</td>
+                        <td>{{ libro.get("genere") }}</td>
+                        <td>{{ libro.get("totale_libri") }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h1>Nessun libro presente in biblioteca</h1>
+            <h3>Per aggiungerne di nuovi è necessario registrarsi</h3>
+            <a href="/register">Registrati Ora!</a>
+        {% endif %}
+    </div>
 {% endblock content %}
 

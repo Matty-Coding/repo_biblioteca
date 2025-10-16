@@ -7,6 +7,10 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .alert {
@@ -33,3 +37,25 @@ body {
     margin-top: 50px;
 }
 
+.tabella {
+    width: 80%;
+}
+
+table {
+    width: 100%;
+    border: 2px solid wheat;
+    border-collapse: collapse;
+}
+
+table tr,
+table th, 
+table td {
+    border: 2px solid black;
+    text-align: center;
+    padding: 15px 15px;
+    color: wheat;
+}
+
+table th {
+    text-transform: uppercase;
+}

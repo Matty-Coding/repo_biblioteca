@@ -1,8 +1,19 @@
 
-from flask_wtf import FlaskForm    # form di flask 
-from wtforms import PasswordField, StringField, SubmitField, EmailField, TelField    # classi con Field == type input HTML
-from wtforms.validators import DataRequired as req, Email, Length, Regexp as reg     # controlli di validazione
-
+from flask_wtf import FlaskForm    
+from wtforms import (
+    PasswordField, 
+    StringField, 
+    SubmitField, 
+    EmailField, 
+    TelField, 
+    IntegerField  # per la quantità dei libri, non prende l'int (?) --> da capire
+)   
+from wtforms.validators import (
+    DataRequired as req, 
+    Email, 
+    Length, 
+    Regexp as reg
+)     
 
 
 class RegisterForm(FlaskForm):
@@ -44,7 +55,7 @@ class RegisterForm(FlaskForm):
                                 req(), 
                                 Length(min=8),
                                 reg(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&*?.])[^\-';\"$@].{8,}$",
-                                    message="La password deve essere di almeno 8 caratteri e contenere almeno una maiuscola, minuscola, numero e simbolo tra ?.!_*")
+                                    message="La password deve essere di almeno 8 caratteri e contenere almeno una maiuscola, minuscola, numero e simbolo tra [?.!_*]")
                                 ] 
                             )
     
@@ -64,7 +75,7 @@ class LoginForm(FlaskForm):
     )
     
     password = PasswordField(
-        "password",
+        "Password",
         validators=[
             req(), 
             Length(min=8), 
@@ -74,3 +85,42 @@ class LoginForm(FlaskForm):
         )
     
     submit = SubmitField("Accedi")
+    
+    
+class LibroForm(FlaskForm):
+    autore = StringField(
+        "Autore",
+        validators=[
+            req(),
+            reg(r"^[a-zA-Z0-9]+[a-zA-Z0-9 '.]+$",
+                message="Lettere, numeri, spazi e simboli ['.] consentiti")
+        ]
+    )
+    
+    titolo = StringField(
+        "Titolo",
+        validators=[
+            req(),
+            reg(r"^[a-zA-Z0-9]+[a-zA-Z0-9 ']+$",
+                message="Lettere, numeri, spazi e apostrofi consentiti")
+        ]
+    )
+    
+    genere = StringField(
+        "Genere",
+        validators=[
+            req(),
+            reg(r"^[a-zA-Z -]+$",
+                message="Lettere, spazi e trattini consentiti")
+        ]
+    )
+    
+    totale_libri = StringField(
+        "Totale libri",
+        validators=[
+            req(),
+            reg(r"^\d+$", message="Solo valori interi consentiti")
+        ]
+    )
+    
+    submit = SubmitField("Invia")
