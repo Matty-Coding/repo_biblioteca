@@ -162,6 +162,15 @@ def modifica_libro(id):
     return render_template("modifica_libro.html", form=form, id=id)
 
 
+@app.route("/elimina-libro/<int:id>")
+@login_required
+def elimina_libro(id):
+    if CRUD_Libro.delete(id):
+        flash("Libro rimosso correttamente", "success")
+    flash("Impossibile rimuovere il libro, riprovare", "error")
+        
+    return redirect(url_for("index"))
+
 
 if __name__ == "__main__":
     with app.app_context():
