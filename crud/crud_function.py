@@ -28,7 +28,7 @@ class CRUD_Libro:
     
     @staticmethod
     def read_all() -> list:
-        return [libro.to_dict() for libro in db.session.query(Libro).all()]
+        return db.session.query(Libro).all()
     
     @staticmethod
     def read_id(id_libro:int) -> Libro | None:
@@ -70,6 +70,7 @@ class CRUD_Libro:
                 libro.totale_libri = totale_libri
             
             db.session.commit()
+            db.session.flush()
             
             return {"operazione":True, "risultato":libro.to_dict()}
         
@@ -90,6 +91,7 @@ class CRUD_Libro:
             
             db.session.delete(libro)
             db.session.commit()
+            db.session.flush()
             
             return {"operazione":True, "risultato":libro.to_dict()}
         
@@ -119,6 +121,7 @@ class CRUD_Utente:
             # utente = Utente(nome, cognome, email, telefono, password)
             db.session.add(utente)
             db.session.commit()
+            db.session.flush()
             
             return {"operazione":True, "risultato":utente.to_dict()}
         
@@ -179,6 +182,7 @@ class CRUD_Utente:
                 utente.password_hash = generate_password_hash(password)
                 
             db.session.commit()
+            db.session.flush()
             
             return {"operazione":True, "risultato":utente.to_dict()}
         
@@ -198,7 +202,8 @@ class CRUD_Utente:
     
             db.session.delete(utente)
             db.session.commit()
-
+            db.session.flush()
+            
             return {"operazione":True, "risultato":utente.to_dict()}
         
         except Exception as e:
@@ -227,6 +232,7 @@ class CRUD_Prestito:
         try:
             db.session.add(prestito)
             db.session.commit()
+            db.session.flush()
             
             return {"operazione":True, "risultato":prestito.to_dict()}
 
@@ -263,6 +269,7 @@ class CRUD_Prestito:
                 prestito.data_fine = data_fine
                 
             db.session.commit()
+            db.session.flush()
     
             return {"operazione":True, "risultato":prestito.to_dict()}
 
@@ -282,6 +289,7 @@ class CRUD_Prestito:
             
             db.session.delete(prestito)
             db.session.commit()
+            db.session.flush()
             
             return {"operazione":True, "risultato":prestito.to_dict()}
         

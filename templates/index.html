@@ -3,32 +3,10 @@
 {% block title %} Home {% endblock title %}
 
 {% block content %}
-    
-    {% with messaggi = get_flashed_messages(with_categories=True) %}
-        {% if messaggi %}
-            {% for i in messaggi %}
-                <div class="alert alert-{{ i[0] }}">{{ i[1] }}</div>                
-            {% endfor %}
-        {% endif %}   
-    {% endwith %}
 
 
-    <!-- <h1>HOME PAGE, SEI REGISTRATO E LOGGATO CORRETTAMENTE</h1> -->
-
-    <!-- <form class="form-container" action="/" method="post">
-
-        {{ form.hidden_tag() }}
-        
-        <div class="form-element">{{ form.autore.label }} {{ form.autore(placeholder="Inserisci autore") }}</div>
-        <div class="form-element">{{ form.titolo.label }} {{ form.titolo(placeholder="Inserisci titolo") }}</div>
-        <div class="form-element">{{ form.genere.label }} {{ form.genere(placeholder="Inserisci genere") }}</div>
-        <div class="form-element">{{ form.totale_libri.label }} {{ form.totale_libri(placeholder="Inserisci totale libri") }}</div>
-        <div class="form-element">{{ form.submit() }}</div>
-        
-    </form>     -->
-
-    <div class="tabella">
-        {% if libri_disponibili %}
+    {% if libri_disponibili %}
+        <div class="tabella">
             <table>
                 <tr>
                     <th>Autore</th>
@@ -47,9 +25,13 @@
             </table>
         {% else %}
             <h1>Nessun libro presente in biblioteca</h1>
-            <h3>Per aggiungerne di nuovi è necessario registrarsi</h3>
-            <a href="/register">Registrati Ora!</a>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
+        
+    <h3>Per effettuare delle operazioni è necessario registrarsi</h3>
+    <a style="color: wheat;" href="{{url_for('register')}}">Registrati Ora!</a>
+    <h4>Se sei già registrato, accedi.</h4>
+    <a style="color: wheat;" href="{{url_for('login')}}">Accedi!</a>
+
 {% endblock content %}
 

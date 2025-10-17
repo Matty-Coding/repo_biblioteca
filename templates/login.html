@@ -12,15 +12,16 @@
         {% endif %}
     {% endwith %}
     
-    <form class="form-container" action="/login" method="post">
+    <form class="form-container" action="{{url_for('login')}}" method="post">
 
         {{ form.hidden_tag() }}
         
-        <div class="form-element">{{ form.utente.label }} {{ form.utente(placeholder="Inserisci telefono o email") }}</div>
-        <div class="form-element">{{ form.password.label }} {{ form.password(placeholder="Inserisci password") }}</div>
+        <div class="form-element">{{ form.utente.label }} {{ form.utente }}</div>
+        <div class="form-element">{{ form.password.label }} {{ form.password }}</div>
         <div class="form-element">{{ form.submit() }}</div>
         
     </form>    
 
+    <a style="color:wheat; margin-top:20px;" href="{{url_for('index')}}">Torna alla Home Page</a>
 {% endblock content %}
 

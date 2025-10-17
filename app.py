@@ -2,7 +2,7 @@
 from os.path import exists
 from flask import Flask, render_template, url_for, flash, redirect
 from settings import Configurazione
-from models import Libro, Utente, Prestito, db, RegisterForm, LoginForm, LibroForm
+from models import Libro, Utente, Prestito, db, RegisterForm, LoginForm, LibroForm, ModificaLibroForm
 from crud import CRUD_Libro, CRUD_Utente, CRUD_Prestito
 from flask_login import login_required, LoginManager, login_user, logout_user, current_user
 
@@ -26,7 +26,7 @@ login_manager.init_app(app)
 # carico utente
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session(Utente, int(user_id))
+    return db.session.get(Utente, int(user_id))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -74,16 +74,16 @@ def login():
         
         if not utente.verifica_password(form.password.data):
             flash("Credenziali errate. Accesso negato!", "error")
+            return render_template("login.html", form=form) 
         
         login_user(utente)
-        load_user(utente.id)
 
         # DEBUG
         if utente.is_authenticated:
             print(f"\n✅ {utente.nome.title()} {utente.cognome.title()} è autenticato correttamente.")
             
         flash("Accesso eseguito correttamente!", "success")
-        return render_template("index.html")
+        return redirect(url_for("aggiungi_libro"))
                
     else:
         if form.errors:
@@ -96,9 +96,14 @@ def login():
 @app.route("/", methods=["GET", "POST"])
 def index():
     # lettura di tutti i libri
-    libri_disponibili = CRUD_Libro.read_all() 
-    print("\n======== LIBRI DISPONIBILI =========\n", libri_disponibili)
-    # gestione form get/post
+    libri_disponibili = [libro.to_dict() for libro in CRUD_Libro.read_all()]
+
+    return render_template("index.html", libri_disponibili=libri_disponibili)
+
+
+@app.route("/aggiungi-libro", methods=["GET", "POST"])
+@login_required
+def aggiungi_libro():
     form = LibroForm()
     if form.validate_on_submit():
         libro = CRUD_Libro.create(
@@ -108,23 +113,53 @@ def index():
             totale_libri = form.totale_libri.data
         )
 
-        nuovo_libro = libro.get("risultato")
-
-        if nuovo_libro is not None:
+        if libro.get("risultato"):
             flash("Libro aggiunto correttamente", "success")
-            return render_template("index.html", nuovo_libro=nuovo_libro, form=form)
+            return redirect(url_for("index"))
 
         else:
             flash("Non è stato possibile aggiungere il libro, riprovare", "error")
-            return render_template("index.html", form=form)
+            return redirect(url_for("index"))
+        
+    else:
+        if form.errors:
+            for errore in form.errors.values():
+                flash(f"{errore}", "error")
+
+    return render_template("aggiungi_libro.html", form=form)
+
+
+@app.route("/modifica-libro/<int:id>", methods=["GET", "POST"])
+@login_required
+def modifica_libro(id):
+    # popola il form con i dati relativi al id inserito
+    # li rende callable per poterli richiamare tramite jinja2 in html
+    libro_esistente = CRUD_Libro.read_id(id)
+    form = ModificaLibroForm(obj=libro_esistente)
+    print("\nLIBRO ESISTENTE --> ", form.data)
+    if form.validate_on_submit():
+        libro_modificato = CRUD_Libro.update(
+            id_libro = form.id.data,
+            autore = form.autore.data,
+            titolo = form.titolo.data,
+            genere = form.genere.data,
+            totale_libri = form.totale_libri.data
+        )
+
+        if libro_modificato.get("risultato"):
+            flash("Libro modificato correttamente", "success")
+            return redirect(url_for("index"))
+        
+        else:
+            flash("Non è stato possibile modificare il libro, riprovare", "error")
+            return redirect(url_for("index"))
         
     else:
         if form.errors:
             for errore in form.errors.values():
                 flash(f"{errore}", "error")
         
-    return render_template("index.html", libri_disponibili=libri_disponibili, form=form)
-
+    return render_template("modifica_libro.html", form=form, id=id)
 
 
 
@@ -141,4 +176,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"\n⚠️  Non è stato possibile creare il database.\n{str(e)}")
                 
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True)

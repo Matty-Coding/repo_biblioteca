@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Aggiungi Libro
+{% endblock title %}
+
+{% block content %}
+
+    {% with messaggi = get_flashed_messages(with_categories=True) %}
+        {% if messaggi %}
+            {% for i in messaggi %}
+                <div class="alert alert-{{ i[0] }}">{{ i[1] }}</div>                
+            {% endfor %}
+        {% endif %}   
+    {% endwith %}
+
+
+
+    <form class="form-container" action="{{url_for('aggiungi_libro')}}" method="post">
+
+        {{ form.hidden_tag() }}
+        
+        <div class="form-element">{{ form.autore.label }} {{ form.autore }}</div>
+        <div class="form-element">{{ form.titolo.label }} {{ form.titolo }}</div>
+        <div class="form-element">{{ form.genere.label }} {{ form.genere }}</div>
+        <div class="form-element">{{ form.totale_libri.label }} {{ form.totale_libri }}</div>
+        <div class="form-element">{{ form.submit() }}</div>
+        
+    </form>    
+
+{% endblock content %}

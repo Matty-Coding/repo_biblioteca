@@ -6,18 +6,21 @@ from wtforms import (
     SubmitField, 
     EmailField, 
     TelField, 
+    HiddenField,
     IntegerField  # per la quantità dei libri, non prende l'int (?) --> da capire
 )   
 from wtforms.validators import (
     DataRequired as req, 
     Email, 
     Length, 
-    Regexp as reg
+    Regexp as reg,
+    ReadOnly
 )     
 
 
 class RegisterForm(FlaskForm):
     nome = StringField("Nome", 
+                       render_kw={"placeholder":"Inserisci nome", "autofocus":True},
                        validators=[
                            req(),
                            reg(r"^[A-Za-z ]+$",
@@ -25,7 +28,8 @@ class RegisterForm(FlaskForm):
                            ]  
                        )
     
-    cognome = StringField("Cognome", 
+    cognome = StringField("Cognome",
+                          render_kw={"placeholder":"Inserisci cognome"},
                           validators=[
                             req(), 
                             reg(r"^[A-Za-z ]+$", 
@@ -34,15 +38,17 @@ class RegisterForm(FlaskForm):
                           )
     
     email = EmailField("Email",
+                        render_kw={"placeholder":"Inserisci email"},
                         validators=[
-                            req(), 
-                            Email(), 
-                            reg(r"^[a-zA-Z0-9]+[_.-]?[a-zA-Z0-9]+@[a-zA-Z0-9]+[-.]?[a-zA-Z0-9]+\.[a-zA-Z]{2,}$", 
+                           req(), 
+                           Email(), 
+                           reg(r"^[a-zA-Z0-9]+[_.-]?[a-zA-Z0-9]+@[a-zA-Z0-9]+[-.]?[a-zA-Z0-9]+\.[a-zA-Z]{2,}$", 
                                 message="Devi inserire una mail valida.")
                             ]
                         )
     
     telefono = TelField("Telefono",
+                        render_kw={"placeholder":"Inserisci telefono"},
                            validators=[
                                req(),
                                reg(r"^\d{10}$", 
@@ -51,6 +57,7 @@ class RegisterForm(FlaskForm):
                             )
     
     password = PasswordField("Password",
+                             render_kw={"placeholder":"Inserisci password"},
                              validators=[
                                 req(), 
                                 Length(min=8),
@@ -66,6 +73,7 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
     utente = StringField(
         "Utente",
+        render_kw={"placeholder":"Inserisci email o telefono"},
         validators=[
             req(),
             reg(r"^\d{10}$|^[a-zA-Z0-9]+[_.-]?[a-zA-Z0-9]+@[a-zA-Z0-9]+[-.]?[a-zA-Z0-9]+\.[a-zA-Z]{2,}$",
@@ -76,6 +84,7 @@ class LoginForm(FlaskForm):
     
     password = PasswordField(
         "Password",
+        render_kw={"placeholder":"Inserisci password"},
         validators=[
             req(), 
             Length(min=8), 
@@ -87,9 +96,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Accedi")
     
     
+    
 class LibroForm(FlaskForm):
     autore = StringField(
         "Autore",
+        render_kw={"placeholder":"Inserisci autore", "autofocus":True},
         validators=[
             req(),
             reg(r"^[a-zA-Z0-9]+[a-zA-Z0-9 '.]+$",
@@ -99,6 +110,7 @@ class LibroForm(FlaskForm):
     
     titolo = StringField(
         "Titolo",
+        render_kw={"placeholder":"Inserisci titolo"},
         validators=[
             req(),
             reg(r"^[a-zA-Z0-9]+[a-zA-Z0-9 ']+$",
@@ -108,6 +120,7 @@ class LibroForm(FlaskForm):
     
     genere = StringField(
         "Genere",
+        render_kw={"placeholder":"Inserisci genere"},
         validators=[
             req(),
             reg(r"^[a-zA-Z -]+$",
@@ -117,6 +130,7 @@ class LibroForm(FlaskForm):
     
     totale_libri = StringField(
         "Totale libri",
+        render_kw={"placeholder":"Inserisci disponibili"},
         validators=[
             req(),
             reg(r"^\d+$", message="Solo valori interi consentiti")
@@ -124,3 +138,44 @@ class LibroForm(FlaskForm):
     )
     
     submit = SubmitField("Invia")
+    
+    
+class ModificaLibroForm(FlaskForm):
+    id = StringField(
+        "ID",
+        render_kw={"readonly":True}
+    )
+    
+    autore = StringField(
+        "Autore",
+        render_kw={"autofocus":True},
+        validators=[
+            reg(r"^[a-zA-Z0-9]+[a-zA-Z0-9 '.]+$",
+                message="Lettere, numeri, spazi e simboli ['.] consentiti")            
+        ]
+    )
+    
+    titolo = StringField(
+        "Titolo",
+        validators=[
+            reg(r"^[a-zA-Z0-9]+[a-zA-Z0-9 ']+$",
+                message="Lettere, numeri, spazi e apostrofi consentiti")            
+        ]
+    )
+    
+    genere = StringField(
+        "Genere",
+        validators=[
+            reg(r"^[a-zA-Z -]+$",
+                message="Lettere, numeri, spazi e trattini consentiti")            
+        ]
+    )
+    
+    totale_libri = StringField(
+        "Disponibili",
+        validators=[
+            reg(r"^\d+$", message="Solo valori interi consentiti")
+        ]
+    )
+    
+    submit = SubmitField("Modifica")
